@@ -17,21 +17,18 @@ export const Hero: React.FC = () => {
 
   useEffect(() => {
     const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-    const isMobile = window.innerWidth < 768;
 
     const ctx = gsap.context(() => {
       if (!heroSectionRef.current || !heroImageContainerRef.current) return;
 
       // GSAP ScrollTrigger timeline controlling camera-like optical push, pan, and multi-plane depth
-      // Pinning heroSection ensures the camera zoom is clearly visible on scroll before advancing
+      // Natural scrubbed camera zoom across the full Hero viewport
       const tl = gsap.timeline({
         scrollTrigger: {
           trigger: heroSectionRef.current,
           start: 'top top',
-          end: isMobile ? '+=65%' : '+=85%',
-          pin: true,
+          end: 'bottom top',
           scrub: 0.35,
-          anticipatePin: 1,
           invalidateOnRefresh: true,
         },
       });
@@ -40,8 +37,8 @@ export const Hero: React.FC = () => {
       tl.to(
         heroImageContainerRef.current,
         {
-          scale: prefersReducedMotion ? 1.06 : 1.38,
-          yPercent: prefersReducedMotion ? 2 : 7,
+          scale: prefersReducedMotion ? 1.05 : 1.35,
+          yPercent: prefersReducedMotion ? 2 : 10,
           xPercent: prefersReducedMotion ? 0 : -2,
           ease: 'none',
         },
@@ -53,7 +50,7 @@ export const Hero: React.FC = () => {
         tl.to(
           heroTextContainerRef.current,
           {
-            y: prefersReducedMotion ? -30 : -80,
+            y: prefersReducedMotion ? -30 : -90,
             opacity: 0.08,
             scale: prefersReducedMotion ? 0.98 : 0.94,
             filter: prefersReducedMotion ? 'none' : 'blur(5px)',
@@ -103,9 +100,6 @@ export const Hero: React.FC = () => {
       }
     }, heroSectionRef);
 
-    // Refresh after DOM layout has settled
-    ScrollTrigger.refresh();
-
     return () => ctx.revert();
   }, []);
 
@@ -120,7 +114,7 @@ export const Hero: React.FC = () => {
       style={{ perspective: '1200px' }}
     >
       {/* ScrollTrigger Camera Zoom Photographic Background Container */}
-      <div className="absolute inset-0 z-0 overflow-hidden">
+      <div className="absolute inset-0 z-0 overflow-hidden pointer-events-none">
         <div
           ref={heroImageContainerRef}
           className="w-full h-full origin-[60%_45%] will-change-transform"
@@ -131,7 +125,6 @@ export const Hero: React.FC = () => {
             priority={true}
             containerClassName="w-full h-full"
             className="w-full h-full object-cover scale-100"
-            onLoad={() => ScrollTrigger.refresh()}
           />
         </div>
 

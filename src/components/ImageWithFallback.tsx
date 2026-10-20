@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import { Building2 } from 'lucide-react';
 
 interface ImageWithFallbackProps extends React.ImgHTMLAttributes<HTMLImageElement> {
@@ -20,35 +20,50 @@ export const ImageWithFallback: React.FC<ImageWithFallbackProps> = ({
   ...props
 }) => {
   const [hasError, setHasError] = useState(false);
-  const [isLoaded, setIsLoaded] = useState(false);
+  // Priority hero images must be visible immediately without opacity-0 flash
+  const [isLoaded, setIsLoaded] = useState(priority);
+  const imgRef = useRef<HTMLImageElement>(null);
 
-  React.useEffect(() => {
+  useEffect(() => {
     setHasError(false);
-    setIsLoaded(false);
-  }, [src]);
+    // If the image is already complete in browser cache or memory, mark as loaded immediately
+    if (imgRef.current && imgRef.current.complete) {
+      if (imgRef.current.naturalWidth > 0) {
+        setIsLoaded(true);
+      } else if (imgRef.current.naturalWidth === 0 && imgRef.current.src) {
+        setHasError(true);
+      }
+    } else if (priority) {
+      setIsLoaded(true);
+    }
+  }, [src, priority]);
 
   return (
     <div className={`relative overflow-hidden bg-neutral-900 ${containerClassName}`}>
       {!hasError ? (
         <>
-          {/* Subtle loading shimmer placeholder before load */}
-          {!isLoaded && (
+          {/* Subtle placeholder only for non-priority lazy images while pending */}
+          {!isLoaded && !priority && (
             <div className="absolute inset-0 bg-neutral-900 animate-pulse flex items-center justify-center">
               <span className="text-xs tracking-widest uppercase text-neutral-600 font-mono">Loading View...</span>
             </div>
           )}
           <img
+            ref={imgRef}
             src={src}
             alt={alt}
-            referrerPolicy="no-referrer"
             loading={priority ? 'eager' : 'lazy'}
+            decoding={priority ? 'sync' : 'async'}
             onLoad={(e) => {
               setIsLoaded(true);
               props.onLoad?.(e);
             }}
-            onError={() => setHasError(true)}
-            className={`w-full h-full object-cover transition-opacity duration-700 ${
-              isLoaded ? 'opacity-100' : 'opacity-0'
+            onError={(e) => {
+              setHasError(true);
+              props.onError?.(e);
+            }}
+            className={`w-full h-full object-cover transition-opacity duration-500 ${
+              isLoaded || priority ? 'opacity-100' : 'opacity-0'
             } ${className}`}
             {...props}
           />

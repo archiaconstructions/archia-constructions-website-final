@@ -316,7 +316,6 @@ export const CinematicParallax: React.FC = () => {
             priority={true}
             containerClassName="w-full h-full"
             className="w-full h-full object-cover"
-            onLoad={() => ScrollTrigger.refresh()}
           />
         </div>
 
@@ -331,7 +330,6 @@ export const CinematicParallax: React.FC = () => {
             alt={STAGES[1].alt}
             containerClassName="w-full h-full"
             className="w-full h-full object-cover"
-            onLoad={() => ScrollTrigger.refresh()}
           />
         </div>
 
@@ -346,7 +344,6 @@ export const CinematicParallax: React.FC = () => {
             alt={STAGES[2].alt}
             containerClassName="w-full h-full"
             className="w-full h-full object-cover"
-            onLoad={() => ScrollTrigger.refresh()}
           />
         </div>
 
@@ -360,7 +357,6 @@ export const CinematicParallax: React.FC = () => {
             alt={STAGES[3].alt}
             containerClassName="w-full h-full"
             className="w-full h-full object-cover"
-            onLoad={() => ScrollTrigger.refresh()}
           />
         </div>
 
