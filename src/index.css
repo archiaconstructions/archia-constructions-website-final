@@ -6,11 +6,13 @@
     --font-serif: 'Cormorant Garamond', Georgia, Cambria, serif;
   }
 
-  body {
+  html, body {
     font-family: var(--font-sans);
     background-color: #0c0d10;
     color: #e6e8eb;
-    overflow-x: hidden;
+    overflow-x: clip;
+    width: 100%;
+    min-height: 100%;
   }
 
   /* Architectural typography utilities */

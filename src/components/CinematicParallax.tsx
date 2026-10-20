@@ -105,24 +105,40 @@ export const CinematicParallax: React.FC = () => {
   const [activeStageIndex, setActiveStageIndex] = useState(0);
   const [scrollProgress, setScrollProgress] = useState(0);
 
+  const scrollToStage = (index: number) => {
+    const st = ScrollTrigger.getById('cinematic-parallax-st');
+    if (st) {
+      const stageProgress = [0.05, 0.35, 0.65, 0.92];
+      const targetY = st.start + (st.end - st.start) * stageProgress[index];
+      window.scrollTo({ top: targetY, behavior: 'smooth' });
+    }
+  };
+
   useEffect(() => {
     const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-    if (prefersReducedMotion) return;
-
     const isMobile = window.innerWidth < 768;
 
     const ctx = gsap.context(() => {
       if (!pinTriggerRef.current) return;
 
+      // Ensure initial card states
+      if (textCard1Ref.current) gsap.set(textCard1Ref.current, { opacity: 1, y: 0 });
+      if (textCard2Ref.current) gsap.set(textCard2Ref.current, { opacity: 0, y: 30 });
+      if (textCard3Ref.current) gsap.set(textCard3Ref.current, { opacity: 0, y: 30 });
+      if (textCard4Ref.current) gsap.set(textCard4Ref.current, { opacity: 0, y: 30 });
+
       // Pinned GSAP ScrollTrigger Sequence
+      // Mobile has +=250% scroll distance to allow ample time to scrub each stage comfortably
       const tl = gsap.timeline({
         scrollTrigger: {
+          id: 'cinematic-parallax-st',
           trigger: pinTriggerRef.current,
           start: 'top top',
-          end: isMobile ? '+=100%' : '+=150%',
+          end: isMobile ? '+=250%' : '+=300%',
           pin: true,
           scrub: 0.4,
           anticipatePin: 1,
+          invalidateOnRefresh: true,
           onUpdate: (self) => {
             const p = self.progress;
             setScrollProgress(p);
@@ -134,149 +150,144 @@ export const CinematicParallax: React.FC = () => {
         },
       });
 
-      // STAGE 1 -> STAGE 2 TRANSITION (Exterior -> Courtyard)
-      // Layer 1 zooms into entrance
+      // Total timeline normalized to 3.6 units
+      // STAGE 1 (0.0 -> 0.7): Monolith Cantilever
       tl.to(
         layer1Ref.current,
         {
-          scale: 1.25,
-          ease: 'power1.inOut',
-          duration: 1,
+          scale: prefersReducedMotion ? 1.04 : 1.15,
+          ease: 'none',
+          duration: 0.7,
         },
         0
       );
 
-      // Card 1 fades out
+      // TRANSITION 1 -> 2 (0.7 -> 1.3): Exterior to Courtyard
       tl.to(
         textCard1Ref.current,
         {
-          y: -40,
+          y: prefersReducedMotion ? -10 : -30,
           opacity: 0,
-          scale: 0.95,
-          duration: 0.4,
+          duration: 0.35,
           ease: 'power1.out',
         },
-        0.2
+        0.7
       );
 
-      // Layer 2 reveals via diagonal clip-path wipe
       tl.fromTo(
         layer2Ref.current,
         {
-          clipPath: 'polygon(0% 100%, 100% 100%, 100% 100%, 0% 100%)',
-          scale: 1.15,
+          opacity: 0,
+          clipPath: prefersReducedMotion ? 'none' : 'polygon(0% 100%, 100% 100%, 100% 100%, 0% 100%)',
+          scale: prefersReducedMotion ? 1.0 : 1.12,
         },
         {
-          clipPath: 'polygon(0% 0%, 100% 0%, 100% 100%, 0% 100%)',
+          opacity: 1,
+          clipPath: prefersReducedMotion ? 'none' : 'polygon(0% 0%, 100% 0%, 100% 100%, 0% 100%)',
           scale: 1.0,
-          duration: 0.9,
+          duration: 0.6,
           ease: 'power2.inOut',
         },
-        0.25
-      );
-
-      // Card 2 enters
-      tl.fromTo(
-        textCard2Ref.current,
-        { y: 60, opacity: 0 },
-        { y: 0, opacity: 1, duration: 0.6, ease: 'power2.out' },
-        0.35
-      );
-
-      // STAGE 2 -> STAGE 3 TRANSITION (Courtyard -> Great Salon Interior)
-      tl.to(
-        layer2Ref.current,
-        {
-          scale: 1.2,
-          filter: 'brightness(0.7)',
-          duration: 0.8,
-          ease: 'power1.inOut',
-        },
-        0.8
+        0.7
       );
 
       tl.to(
         textCard2Ref.current,
         {
-          y: -40,
-          opacity: 0,
+          y: 0,
+          opacity: 1,
           duration: 0.4,
-          ease: 'power1.out',
-        },
-        0.85
-      );
-
-      // Layer 3 reveals via circular/vertical aperture reveal
-      tl.fromTo(
-        layer3Ref.current,
-        {
-          clipPath: 'inset(0% 0% 100% 0%)',
-          scale: 1.18,
-        },
-        {
-          clipPath: 'inset(0% 0% 0% 0%)',
-          scale: 1.0,
-          duration: 0.9,
-          ease: 'power2.inOut',
+          ease: 'power2.out',
         },
         0.9
       );
 
-      // Card 3 enters
-      tl.fromTo(
-        textCard3Ref.current,
-        { y: 60, opacity: 0 },
-        { y: 0, opacity: 1, duration: 0.6, ease: 'power2.out' },
-        1.0
-      );
+      // STAGE 2 HOLD (1.3 -> 1.7)
 
-      // STAGE 3 -> STAGE 4 TRANSITION (Great Salon -> Master Sanctuary)
+      // TRANSITION 2 -> 3 (1.7 -> 2.3): Courtyard to Great Salon Interior
       tl.to(
-        layer3Ref.current,
+        textCard2Ref.current,
         {
-          scale: 1.15,
-          filter: 'brightness(0.65)',
-          duration: 0.8,
-          ease: 'power1.inOut',
-        },
-        1.5
-      );
-
-      tl.to(
-        textCard3Ref.current,
-        {
-          y: -40,
+          y: prefersReducedMotion ? -10 : -30,
           opacity: 0,
-          duration: 0.4,
+          duration: 0.35,
           ease: 'power1.out',
         },
-        1.55
+        1.7
       );
 
-      // Layer 4 reveals with depth fade
+      tl.fromTo(
+        layer3Ref.current,
+        {
+          opacity: 0,
+          clipPath: prefersReducedMotion ? 'none' : 'inset(0% 0% 100% 0%)',
+          scale: prefersReducedMotion ? 1.0 : 1.12,
+        },
+        {
+          opacity: 1,
+          clipPath: prefersReducedMotion ? 'none' : 'inset(0% 0% 0% 0%)',
+          scale: 1.0,
+          duration: 0.6,
+          ease: 'power2.inOut',
+        },
+        1.7
+      );
+
+      tl.to(
+        textCard3Ref.current,
+        {
+          y: 0,
+          opacity: 1,
+          duration: 0.4,
+          ease: 'power2.out',
+        },
+        1.9
+      );
+
+      // STAGE 3 HOLD (2.3 -> 2.7)
+
+      // TRANSITION 3 -> 4 (2.7 -> 3.3): Great Salon to Master Sanctuary
+      tl.to(
+        textCard3Ref.current,
+        {
+          y: prefersReducedMotion ? -10 : -30,
+          opacity: 0,
+          duration: 0.35,
+          ease: 'power1.out',
+        },
+        2.7
+      );
+
       tl.fromTo(
         layer4Ref.current,
         {
           opacity: 0,
-          scale: 1.2,
+          scale: prefersReducedMotion ? 1.0 : 1.14,
         },
         {
           opacity: 1,
           scale: 1.0,
-          duration: 0.8,
+          duration: 0.6,
           ease: 'power2.inOut',
         },
-        1.6
+        2.7
       );
 
-      // Card 4 enters
-      tl.fromTo(
+      tl.to(
         textCard4Ref.current,
-        { y: 60, opacity: 0 },
-        { y: 0, opacity: 1, duration: 0.6, ease: 'power2.out' },
-        1.7
+        {
+          y: 0,
+          opacity: 1,
+          duration: 0.4,
+          ease: 'power2.out',
+        },
+        2.9
       );
+
+      // STAGE 4 HOLD (3.3 -> 3.6)
     }, pinTriggerRef);
+
+    ScrollTrigger.refresh();
 
     return () => ctx.revert();
   }, []);
@@ -305,6 +316,7 @@ export const CinematicParallax: React.FC = () => {
             priority={true}
             containerClassName="w-full h-full"
             className="w-full h-full object-cover"
+            onLoad={() => ScrollTrigger.refresh()}
           />
         </div>
 
@@ -319,6 +331,7 @@ export const CinematicParallax: React.FC = () => {
             alt={STAGES[1].alt}
             containerClassName="w-full h-full"
             className="w-full h-full object-cover"
+            onLoad={() => ScrollTrigger.refresh()}
           />
         </div>
 
@@ -333,6 +346,7 @@ export const CinematicParallax: React.FC = () => {
             alt={STAGES[2].alt}
             containerClassName="w-full h-full"
             className="w-full h-full object-cover"
+            onLoad={() => ScrollTrigger.refresh()}
           />
         </div>
 
@@ -346,6 +360,7 @@ export const CinematicParallax: React.FC = () => {
             alt={STAGES[3].alt}
             containerClassName="w-full h-full"
             className="w-full h-full object-cover"
+            onLoad={() => ScrollTrigger.refresh()}
           />
         </div>
 
@@ -366,17 +381,20 @@ export const CinematicParallax: React.FC = () => {
           {/* Interactive Stage Indicators (Buttons allow direct click to view) */}
           <div className="hidden md:flex items-center gap-2 font-mono text-[11px]">
             {STAGES.map((s, idx) => (
-              <div
+              <button
+                type="button"
                 key={s.id}
-                className={`px-3 py-1 border transition-all ${
+                onClick={() => scrollToStage(idx)}
+                className={`px-3 py-1 border transition-all cursor-pointer ${
                   activeStageIndex === idx
                     ? 'bg-amber-100 text-neutral-950 font-semibold border-amber-200'
-                    : 'bg-black/60 text-neutral-400 border-white/10'
+                    : 'bg-black/60 text-neutral-400 border-white/10 hover:text-white hover:border-neutral-500'
                 }`}
+                aria-label={`Jump to Stage ${s.stageNumber}: ${s.category}`}
               >
                 <span>{s.stageNumber}</span>
                 <span className="ml-1.5 uppercase tracking-wider">{s.category}</span>
-              </div>
+              </button>
             ))}
           </div>
 
@@ -389,121 +407,123 @@ export const CinematicParallax: React.FC = () => {
           </div>
         </div>
 
-        {/* Dynamic Architectural Narrative Cards (Overlapping at Bottom) */}
+        {/* Dynamic Architectural Narrative Cards (Stacked via Grid Overlay for seamless GSAP control) */}
         <div className="relative z-50 max-w-7xl mx-auto w-full px-6 md:px-10 pb-10 flex flex-col md:flex-row items-end justify-between gap-6 pointer-events-none">
-          {/* Card 1: Exterior */}
-          <div
-            ref={textCard1Ref}
-            className={`max-w-xl bg-neutral-950/90 backdrop-blur-xl border border-neutral-800 p-6 sm:p-8 shadow-2xl transition-opacity pointer-events-auto ${
-              activeStageIndex === 0 ? 'block' : 'hidden'
-            }`}
-          >
-            <div className="flex items-center justify-between text-xs text-neutral-400 font-mono mb-3 pb-2 border-b border-neutral-800">
-              <span className="uppercase tracking-widest text-amber-200 font-semibold">
-                Phase 01 / {STAGES[0].category}
-              </span>
-              <span>{STAGES[0].subtitle}</span>
+          <div className="grid grid-cols-1 grid-rows-1 max-w-xl w-full [&>*]:col-start-1 [&>*]:row-start-1">
+            {/* Card 1: Exterior */}
+            <div
+              ref={textCard1Ref}
+              className={`bg-neutral-950/90 backdrop-blur-xl border border-neutral-800 p-6 sm:p-8 shadow-2xl will-change-transform ${
+                activeStageIndex === 0 ? 'pointer-events-auto' : 'pointer-events-none'
+              }`}
+            >
+              <div className="flex items-center justify-between text-xs text-neutral-400 font-mono mb-3 pb-2 border-b border-neutral-800">
+                <span className="uppercase tracking-widest text-amber-200 font-semibold">
+                  Phase 01 / {STAGES[0].category}
+                </span>
+                <span>{STAGES[0].subtitle}</span>
+              </div>
+              <h3 className="text-xl sm:text-2xl font-light text-white tracking-tight mb-3">
+                {STAGES[0].title}
+              </h3>
+              <p className="text-xs sm:text-sm text-neutral-300 font-light leading-relaxed mb-6">
+                {STAGES[0].description}
+              </p>
+              <div className="grid grid-cols-3 gap-2 p-3 bg-neutral-900 border border-neutral-800 font-mono text-[11px]">
+                {STAGES[0].specs.map((sp, i) => (
+                  <div key={i}>
+                    <p className="text-neutral-500 uppercase">{sp.label}</p>
+                    <p className="text-amber-200 font-medium mt-0.5">{sp.value}</p>
+                  </div>
+                ))}
+              </div>
             </div>
-            <h3 className="text-xl sm:text-2xl font-light text-white tracking-tight mb-3">
-              {STAGES[0].title}
-            </h3>
-            <p className="text-xs sm:text-sm text-neutral-300 font-light leading-relaxed mb-6">
-              {STAGES[0].description}
-            </p>
-            <div className="grid grid-cols-3 gap-2 p-3 bg-neutral-900 border border-neutral-800 font-mono text-[11px]">
-              {STAGES[0].specs.map((sp, i) => (
-                <div key={i}>
-                  <p className="text-neutral-500 uppercase">{sp.label}</p>
-                  <p className="text-amber-200 font-medium mt-0.5">{sp.value}</p>
-                </div>
-              ))}
-            </div>
-          </div>
 
-          {/* Card 2: Courtyard */}
-          <div
-            ref={textCard2Ref}
-            className={`max-w-xl bg-neutral-950/90 backdrop-blur-xl border border-neutral-800 p-6 sm:p-8 shadow-2xl transition-opacity pointer-events-auto ${
-              activeStageIndex === 1 ? 'block' : 'hidden'
-            }`}
-          >
-            <div className="flex items-center justify-between text-xs text-neutral-400 font-mono mb-3 pb-2 border-b border-neutral-800">
-              <span className="uppercase tracking-widest text-amber-200 font-semibold">
-                Phase 02 / {STAGES[1].category}
-              </span>
-              <span>{STAGES[1].subtitle}</span>
+            {/* Card 2: Courtyard */}
+            <div
+              ref={textCard2Ref}
+              className={`bg-neutral-950/90 backdrop-blur-xl border border-neutral-800 p-6 sm:p-8 shadow-2xl will-change-transform ${
+                activeStageIndex === 1 ? 'pointer-events-auto' : 'pointer-events-none'
+              }`}
+            >
+              <div className="flex items-center justify-between text-xs text-neutral-400 font-mono mb-3 pb-2 border-b border-neutral-800">
+                <span className="uppercase tracking-widest text-amber-200 font-semibold">
+                  Phase 02 / {STAGES[1].category}
+                </span>
+                <span>{STAGES[1].subtitle}</span>
+              </div>
+              <h3 className="text-xl sm:text-2xl font-light text-white tracking-tight mb-3">
+                {STAGES[1].title}
+              </h3>
+              <p className="text-xs sm:text-sm text-neutral-300 font-light leading-relaxed mb-6">
+                {STAGES[1].description}
+              </p>
+              <div className="grid grid-cols-3 gap-2 p-3 bg-neutral-900 border border-neutral-800 font-mono text-[11px]">
+                {STAGES[1].specs.map((sp, i) => (
+                  <div key={i}>
+                    <p className="text-neutral-500 uppercase">{sp.label}</p>
+                    <p className="text-amber-200 font-medium mt-0.5">{sp.value}</p>
+                  </div>
+                ))}
+              </div>
             </div>
-            <h3 className="text-xl sm:text-2xl font-light text-white tracking-tight mb-3">
-              {STAGES[1].title}
-            </h3>
-            <p className="text-xs sm:text-sm text-neutral-300 font-light leading-relaxed mb-6">
-              {STAGES[1].description}
-            </p>
-            <div className="grid grid-cols-3 gap-2 p-3 bg-neutral-900 border border-neutral-800 font-mono text-[11px]">
-              {STAGES[1].specs.map((sp, i) => (
-                <div key={i}>
-                  <p className="text-neutral-500 uppercase">{sp.label}</p>
-                  <p className="text-amber-200 font-medium mt-0.5">{sp.value}</p>
-                </div>
-              ))}
-            </div>
-          </div>
 
-          {/* Card 3: Great Salon */}
-          <div
-            ref={textCard3Ref}
-            className={`max-w-xl bg-neutral-950/90 backdrop-blur-xl border border-neutral-800 p-6 sm:p-8 shadow-2xl transition-opacity pointer-events-auto ${
-              activeStageIndex === 2 ? 'block' : 'hidden'
-            }`}
-          >
-            <div className="flex items-center justify-between text-xs text-neutral-400 font-mono mb-3 pb-2 border-b border-neutral-800">
-              <span className="uppercase tracking-widest text-amber-200 font-semibold">
-                Phase 03 / {STAGES[2].category}
-              </span>
-              <span>{STAGES[2].subtitle}</span>
+            {/* Card 3: Great Salon */}
+            <div
+              ref={textCard3Ref}
+              className={`bg-neutral-950/90 backdrop-blur-xl border border-neutral-800 p-6 sm:p-8 shadow-2xl will-change-transform ${
+                activeStageIndex === 2 ? 'pointer-events-auto' : 'pointer-events-none'
+              }`}
+            >
+              <div className="flex items-center justify-between text-xs text-neutral-400 font-mono mb-3 pb-2 border-b border-neutral-800">
+                <span className="uppercase tracking-widest text-amber-200 font-semibold">
+                  Phase 03 / {STAGES[2].category}
+                </span>
+                <span>{STAGES[2].subtitle}</span>
+              </div>
+              <h3 className="text-xl sm:text-2xl font-light text-white tracking-tight mb-3">
+                {STAGES[2].title}
+              </h3>
+              <p className="text-xs sm:text-sm text-neutral-300 font-light leading-relaxed mb-6">
+                {STAGES[2].description}
+              </p>
+              <div className="grid grid-cols-3 gap-2 p-3 bg-neutral-900 border border-neutral-800 font-mono text-[11px]">
+                {STAGES[2].specs.map((sp, i) => (
+                  <div key={i}>
+                    <p className="text-neutral-500 uppercase">{sp.label}</p>
+                    <p className="text-amber-200 font-medium mt-0.5">{sp.value}</p>
+                  </div>
+                ))}
+              </div>
             </div>
-            <h3 className="text-xl sm:text-2xl font-light text-white tracking-tight mb-3">
-              {STAGES[2].title}
-            </h3>
-            <p className="text-xs sm:text-sm text-neutral-300 font-light leading-relaxed mb-6">
-              {STAGES[2].description}
-            </p>
-            <div className="grid grid-cols-3 gap-2 p-3 bg-neutral-900 border border-neutral-800 font-mono text-[11px]">
-              {STAGES[2].specs.map((sp, i) => (
-                <div key={i}>
-                  <p className="text-neutral-500 uppercase">{sp.label}</p>
-                  <p className="text-amber-200 font-medium mt-0.5">{sp.value}</p>
-                </div>
-              ))}
-            </div>
-          </div>
 
-          {/* Card 4: Master Sanctuary */}
-          <div
-            ref={textCard4Ref}
-            className={`max-w-xl bg-neutral-950/90 backdrop-blur-xl border border-neutral-800 p-6 sm:p-8 shadow-2xl transition-opacity pointer-events-auto ${
-              activeStageIndex === 3 ? 'block' : 'hidden'
-            }`}
-          >
-            <div className="flex items-center justify-between text-xs text-neutral-400 font-mono mb-3 pb-2 border-b border-neutral-800">
-              <span className="uppercase tracking-widest text-amber-200 font-semibold">
-                Phase 04 / {STAGES[3].category}
-              </span>
-              <span>{STAGES[3].subtitle}</span>
-            </div>
-            <h3 className="text-xl sm:text-2xl font-light text-white tracking-tight mb-3">
-              {STAGES[3].title}
-            </h3>
-            <p className="text-xs sm:text-sm text-neutral-300 font-light leading-relaxed mb-6">
-              {STAGES[3].description}
-            </p>
-            <div className="grid grid-cols-3 gap-2 p-3 bg-neutral-900 border border-neutral-800 font-mono text-[11px]">
-              {STAGES[3].specs.map((sp, i) => (
-                <div key={i}>
-                  <p className="text-neutral-500 uppercase">{sp.label}</p>
-                  <p className="text-amber-200 font-medium mt-0.5">{sp.value}</p>
-                </div>
-              ))}
+            {/* Card 4: Master Sanctuary */}
+            <div
+              ref={textCard4Ref}
+              className={`bg-neutral-950/90 backdrop-blur-xl border border-neutral-800 p-6 sm:p-8 shadow-2xl will-change-transform ${
+                activeStageIndex === 3 ? 'pointer-events-auto' : 'pointer-events-none'
+              }`}
+            >
+              <div className="flex items-center justify-between text-xs text-neutral-400 font-mono mb-3 pb-2 border-b border-neutral-800">
+                <span className="uppercase tracking-widest text-amber-200 font-semibold">
+                  Phase 04 / {STAGES[3].category}
+                </span>
+                <span>{STAGES[3].subtitle}</span>
+              </div>
+              <h3 className="text-xl sm:text-2xl font-light text-white tracking-tight mb-3">
+                {STAGES[3].title}
+              </h3>
+              <p className="text-xs sm:text-sm text-neutral-300 font-light leading-relaxed mb-6">
+                {STAGES[3].description}
+              </p>
+              <div className="grid grid-cols-3 gap-2 p-3 bg-neutral-900 border border-neutral-800 font-mono text-[11px]">
+                {STAGES[3].specs.map((sp, i) => (
+                  <div key={i}>
+                    <p className="text-neutral-500 uppercase">{sp.label}</p>
+                    <p className="text-amber-200 font-medium mt-0.5">{sp.value}</p>
+                  </div>
+                ))}
+              </div>
             </div>
           </div>
 

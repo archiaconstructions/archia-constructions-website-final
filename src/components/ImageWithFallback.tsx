@@ -42,7 +42,10 @@ export const ImageWithFallback: React.FC<ImageWithFallbackProps> = ({
             alt={alt}
             referrerPolicy="no-referrer"
             loading={priority ? 'eager' : 'lazy'}
-            onLoad={() => setIsLoaded(true)}
+            onLoad={(e) => {
+              setIsLoaded(true);
+              props.onLoad?.(e);
+            }}
             onError={() => setHasError(true)}
             className={`w-full h-full object-cover transition-opacity duration-700 ${
               isLoaded ? 'opacity-100' : 'opacity-0'

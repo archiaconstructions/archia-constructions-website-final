@@ -53,6 +53,8 @@ export const SpatialDepthViewer: React.FC = () => {
   const [mousePos, setMousePos] = useState({ x: 0, y: 0 });
   const [depthSeparation, setDepthSeparation] = useState(1.4);
   const [isHovered, setIsHovered] = useState(false);
+  const [isDragging, setIsDragging] = useState(false);
+  const isDraggingRef = useRef(false);
 
   // Three.js internal references
   const sceneRef = useRef<THREE.Scene | null>(null);
@@ -289,21 +291,68 @@ export const SpatialDepthViewer: React.FC = () => {
     }
   }, [depthSeparation]);
 
-  // Mouse / Pointer handler for parallax camera tilt
-  const handlePointerMove = (e: React.PointerEvent<HTMLDivElement>) => {
-    const rect = e.currentTarget.getBoundingClientRect();
-    const x = ((e.clientX - rect.left) / rect.width) * 2 - 1;
-    const y = -(((e.clientY - rect.top) / rect.height) * 2 - 1);
+  const updateCameraFromPointer = (clientX: number, clientY: number, containerRect: DOMRect) => {
+    const rawX = ((clientX - containerRect.left) / containerRect.width) * 2 - 1;
+    const rawY = -(((clientY - containerRect.top) / containerRect.height) * 2 - 1);
+    const x = Math.max(-1.2, Math.min(1.2, rawX));
+    const y = Math.max(-1.2, Math.min(1.2, rawY));
     setMousePos({ x, y });
 
-    targetCamPos.current.x = x * 0.85;
-    targetCamPos.current.y = y * 0.55;
+    targetCamPos.current.x = x * 0.95;
+    targetCamPos.current.y = y * 0.65;
   };
 
-  const handlePointerLeave = () => {
-    setIsHovered(false);
-    targetCamPos.current.set(0, 0, 5.2);
-    setMousePos({ x: 0, y: 0 });
+  const handlePointerDown = (e: React.PointerEvent<HTMLDivElement>) => {
+    // If interaction occurs on range input, buttons, or links, let them handle it
+    const target = e.target as HTMLElement;
+    if (target.closest('input, button, a, [data-interactive="true"]')) {
+      return;
+    }
+
+    isDraggingRef.current = true;
+    setIsDragging(true);
+    setIsHovered(true);
+
+    try {
+      e.currentTarget.setPointerCapture(e.pointerId);
+    } catch {
+      // Ignore if pointer capture unavailable
+    }
+
+    const rect = e.currentTarget.getBoundingClientRect();
+    updateCameraFromPointer(e.clientX, e.clientY, rect);
+  };
+
+  const handlePointerMove = (e: React.PointerEvent<HTMLDivElement>) => {
+    const rect = e.currentTarget.getBoundingClientRect();
+
+    if (e.pointerType === 'mouse') {
+      updateCameraFromPointer(e.clientX, e.clientY, rect);
+    } else if (isDraggingRef.current) {
+      updateCameraFromPointer(e.clientX, e.clientY, rect);
+    }
+  };
+
+  const handlePointerUp = (e: React.PointerEvent<HTMLDivElement>) => {
+    if (isDraggingRef.current) {
+      isDraggingRef.current = false;
+      setIsDragging(false);
+      try {
+        if (e.currentTarget.hasPointerCapture(e.pointerId)) {
+          e.currentTarget.releasePointerCapture(e.pointerId);
+        }
+      } catch {
+        // Ignore
+      }
+    }
+  };
+
+  const handlePointerLeave = (e: React.PointerEvent<HTMLDivElement>) => {
+    if (e.pointerType === 'mouse') {
+      setIsHovered(false);
+      targetCamPos.current.set(0, 0, 5.2);
+      setMousePos({ x: 0, y: 0 });
+    }
   };
 
   return (
@@ -346,13 +395,24 @@ export const SpatialDepthViewer: React.FC = () => {
 
         {/* Main Interactive Three.js WebGL Container */}
         <div
-          className="relative w-full h-[480px] sm:h-[560px] lg:h-[620px] bg-[#0c0d10] border border-neutral-800 overflow-hidden group select-none cursor-grab active:cursor-grabbing touch-pan-y"
+          className={`relative w-full h-[480px] sm:h-[560px] lg:h-[620px] bg-[#0c0d10] border border-neutral-800 overflow-hidden group select-none ${
+            isDragging ? 'cursor-grabbing' : 'cursor-grab'
+          } touch-none`}
+          onPointerDown={handlePointerDown}
           onPointerMove={handlePointerMove}
+          onPointerUp={handlePointerUp}
+          onPointerCancel={handlePointerUp}
           onPointerEnter={() => setIsHovered(true)}
           onPointerLeave={handlePointerLeave}
         >
           {/* WebGL Canvas Mount */}
           <div ref={mountRef} className="absolute inset-0 w-full h-full pointer-events-none" />
+
+          {/* Mobile Touch Drag Guidance Badge */}
+          <div className="sm:hidden absolute top-4 right-4 z-10 pointer-events-none px-2.5 py-1 bg-black/80 backdrop-blur-md border border-amber-200/30 text-[10px] font-mono text-amber-200 flex items-center gap-1.5 shadow-lg">
+            <Move3d className="w-3 h-3 text-amber-200" />
+            <span>Touch Drag 3D</span>
+          </div>
 
           {/* Architectural HUD Overlay: Top Left Spec Pill */}
           <div className="absolute top-5 left-5 z-10 pointer-events-none bg-neutral-950/85 backdrop-blur-md border border-neutral-800/80 p-3 max-w-xs font-mono text-xs">
@@ -365,17 +425,17 @@ export const SpatialDepthViewer: React.FC = () => {
           </div>
 
           {/* Top Right Live Telemetry */}
-          <div className="absolute top-5 right-5 z-10 pointer-events-none bg-neutral-950/85 backdrop-blur-md border border-neutral-800/80 px-3 py-2 font-mono text-[11px] text-neutral-400 flex items-center gap-4">
+          <div className="hidden sm:flex absolute top-5 right-5 z-10 pointer-events-none bg-neutral-950/85 backdrop-blur-md border border-neutral-800/80 px-3 py-2 font-mono text-[11px] text-neutral-400 items-center gap-4">
             <div>
               <span>CAM X: </span>
               <span className="text-amber-200 tabular-nums">
-                {(mousePos.x * 0.85).toFixed(2)}m
+                {(mousePos.x * 0.95).toFixed(2)}m
               </span>
             </div>
             <div>
               <span>CAM Y: </span>
               <span className="text-amber-200 tabular-nums">
-                {(mousePos.y * 0.55).toFixed(2)}m
+                {(mousePos.y * 0.65).toFixed(2)}m
               </span>
             </div>
             <div>
@@ -391,7 +451,10 @@ export const SpatialDepthViewer: React.FC = () => {
           </div>
 
           {/* Unified Bottom Control Dock (Three.js Skill Compliant) */}
-          <div className="absolute bottom-5 left-1/2 -translate-x-1/2 z-10 bg-neutral-950/90 backdrop-blur-md border border-neutral-800 px-5 py-3 max-w-xl w-[92%] sm:w-auto flex flex-col sm:flex-row items-center justify-between gap-4">
+          <div
+            data-interactive="true"
+            className="absolute bottom-5 left-1/2 -translate-x-1/2 z-20 bg-neutral-950/90 backdrop-blur-md border border-neutral-800 px-5 py-3 max-w-xl w-[92%] sm:w-auto flex flex-col sm:flex-row items-center justify-between gap-4 pointer-events-auto"
+          >
             <div className="flex items-center gap-3 text-xs font-mono text-neutral-400">
               <Layers className="w-4 h-4 text-amber-200" />
               <span>Spatial Z-Separation:</span>
@@ -409,7 +472,7 @@ export const SpatialDepthViewer: React.FC = () => {
 
             <div className="flex items-center gap-3">
               <span className="text-[11px] font-mono text-neutral-500 hidden sm:inline">
-                {isHovered ? 'Active Parallax View' : 'Move cursor to explore depth'}
+                {isDragging ? 'Interactive 3D Pivot' : isHovered ? 'Active Parallax View' : 'Move cursor or touch drag'}
               </span>
               <a
                 href={`https://wa.me/${COMPANY_INFO.whatsappNumber}?text=${encodeURIComponent(

@@ -17,18 +17,21 @@ export const Hero: React.FC = () => {
 
   useEffect(() => {
     const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-    if (prefersReducedMotion) return;
+    const isMobile = window.innerWidth < 768;
 
     const ctx = gsap.context(() => {
       if (!heroSectionRef.current || !heroImageContainerRef.current) return;
 
       // GSAP ScrollTrigger timeline controlling camera-like optical push, pan, and multi-plane depth
+      // Pinning heroSection ensures the camera zoom is clearly visible on scroll before advancing
       const tl = gsap.timeline({
         scrollTrigger: {
           trigger: heroSectionRef.current,
           start: 'top top',
-          end: 'bottom top',
+          end: isMobile ? '+=65%' : '+=85%',
+          pin: true,
           scrub: 0.35,
+          anticipatePin: 1,
           invalidateOnRefresh: true,
         },
       });
@@ -37,9 +40,9 @@ export const Hero: React.FC = () => {
       tl.to(
         heroImageContainerRef.current,
         {
-          scale: 1.32,
-          yPercent: 12,
-          xPercent: -3,
+          scale: prefersReducedMotion ? 1.06 : 1.38,
+          yPercent: prefersReducedMotion ? 2 : 7,
+          xPercent: prefersReducedMotion ? 0 : -2,
           ease: 'none',
         },
         0
@@ -50,10 +53,10 @@ export const Hero: React.FC = () => {
         tl.to(
           heroTextContainerRef.current,
           {
-            y: -100,
-            opacity: 0.05,
-            scale: 0.95,
-            filter: 'blur(6px)',
+            y: prefersReducedMotion ? -30 : -80,
+            opacity: 0.08,
+            scale: prefersReducedMotion ? 0.98 : 0.94,
+            filter: prefersReducedMotion ? 'none' : 'blur(5px)',
             ease: 'power1.inOut',
           },
           0
@@ -65,7 +68,7 @@ export const Hero: React.FC = () => {
         tl.to(
           heroForegroundRef.current,
           {
-            y: -220,
+            y: prefersReducedMotion ? -40 : -140,
             opacity: 0,
             ease: 'none',
           },
@@ -78,7 +81,7 @@ export const Hero: React.FC = () => {
         tl.to(
           crosshairRef.current,
           {
-            scale: 1.4,
+            scale: prefersReducedMotion ? 1.1 : 1.45,
             opacity: 0,
             ease: 'none',
           },
@@ -91,7 +94,7 @@ export const Hero: React.FC = () => {
         tl.to(
           metricsBarRef.current,
           {
-            y: 40,
+            y: prefersReducedMotion ? 15 : 35,
             opacity: 0,
             ease: 'none',
           },
@@ -99,6 +102,9 @@ export const Hero: React.FC = () => {
         );
       }
     }, heroSectionRef);
+
+    // Refresh after DOM layout has settled
+    ScrollTrigger.refresh();
 
     return () => ctx.revert();
   }, []);
@@ -125,6 +131,7 @@ export const Hero: React.FC = () => {
             priority={true}
             containerClassName="w-full h-full"
             className="w-full h-full object-cover scale-100"
+            onLoad={() => ScrollTrigger.refresh()}
           />
         </div>
 

@@ -3,7 +3,9 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import React from 'react';
+import React, { useEffect } from 'react';
+import gsap from 'gsap';
+import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { Navbar } from './components/Navbar';
 import { Hero } from './components/Hero';
 import { CinematicParallax } from './components/CinematicParallax';
@@ -18,13 +20,45 @@ import { Footer } from './components/Footer';
 import { MessageCircle } from 'lucide-react';
 import { COMPANY_INFO } from './data/content';
 
+gsap.registerPlugin(ScrollTrigger);
+
+// Ensure ScrollTrigger ignores mobile address bar resize disruptions
+ScrollTrigger.config({
+  ignoreMobileResize: true,
+  autoRefreshEvents: 'visibilitychange,DOMContentLoaded,load,resize',
+});
+
 export default function App() {
   const whatsappUrl = `https://wa.me/${COMPANY_INFO.whatsappNumber}?text=${encodeURIComponent(
     'Hello Milaan Constructions, I am interested in discussing a luxury residential construction project in the Chandigarh Tricity area.'
   )}`;
 
+  useEffect(() => {
+    // Refresh ScrollTrigger when Google Fonts finish layout rendering
+    if (document.fonts && document.fonts.ready) {
+      document.fonts.ready.then(() => {
+        ScrollTrigger.refresh(true);
+      });
+    }
+
+    const handleLoad = () => {
+      ScrollTrigger.refresh(true);
+    };
+    window.addEventListener('load', handleLoad);
+
+    const handleOrientation = () => {
+      setTimeout(() => ScrollTrigger.refresh(true), 250);
+    };
+    window.addEventListener('orientationchange', handleOrientation);
+
+    return () => {
+      window.removeEventListener('load', handleLoad);
+      window.removeEventListener('orientationchange', handleOrientation);
+    };
+  }, []);
+
   return (
-    <div className="min-h-screen bg-[#0c0d10] text-[#f2f3f5] font-body bg-grain selection:bg-amber-900/40 selection:text-amber-200 overflow-x-hidden">
+    <div className="min-h-screen bg-[#0c0d10] text-[#f2f3f5] font-body bg-grain selection:bg-amber-900/40 selection:text-amber-200 overflow-x-clip">
       {/* Fixed Navigation adhering to Top Bar Contract */}
       <Navbar />
 
