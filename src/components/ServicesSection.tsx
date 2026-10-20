@@ -10,7 +10,7 @@ export const ServicesSection: React.FC = () => {
 
   const getServiceWhatsAppUrl = (serviceTitle: string) => {
     return `https://wa.me/${COMPANY_INFO.whatsappNumber}?text=${encodeURIComponent(
-      `Hello Archia Constructions, I am inquiring regarding your "${serviceTitle}" services for our home in the Chandigarh Tricity area.`
+      `Hello Milaan Constructions, I am inquiring regarding your "${serviceTitle}" services for our home in the Chandigarh Tricity area.`
     )}`;
   };
 

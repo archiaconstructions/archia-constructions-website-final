@@ -413,7 +413,7 @@ export const SpatialDepthViewer: React.FC = () => {
               </span>
               <a
                 href={`https://wa.me/${COMPANY_INFO.whatsappNumber}?text=${encodeURIComponent(
-                  `Hello Archia Constructions, I viewed "${activePerspective.title}" on your 3D spatial depth explorer and would like to discuss structural designs for our residence.`
+                  `Hello Milaan Constructions, I viewed "${activePerspective.title}" on your 3D spatial depth explorer and would like to discuss structural designs for our residence.`
                 )}`}
                 target="_blank"
                 rel="noopener noreferrer"

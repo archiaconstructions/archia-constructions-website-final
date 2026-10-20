@@ -139,7 +139,7 @@ export const ProjectsGallery: React.FC = () => {
 
   const getProjectWhatsAppUrl = (project: Project) => {
     return `https://wa.me/${COMPANY_INFO.whatsappNumber}?text=${encodeURIComponent(
-      `Hello Archia Constructions, I am interested in discussing a residential project similar in architectural scope and scale to "${project.title}" located in ${project.location} (${project.area}).`
+      `Hello Milaan Constructions, I am interested in discussing a residential project similar in architectural scope and scale to "${project.title}" located in ${project.location} (${project.area}).`
     )}`;
   };
 

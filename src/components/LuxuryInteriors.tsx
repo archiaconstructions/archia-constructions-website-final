@@ -113,11 +113,11 @@ export const LuxuryInteriors: React.FC = () => {
             {/* Direct WhatsApp Consultation */}
             <div className="pt-6 border-t border-neutral-800/80 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
               <span className="text-xs text-neutral-400 font-mono">
-                Sample finishes available for inspection at our Mohali design gallery.
+                Sample finishes and material specifications available during scheduled consultations.
               </span>
               <a
                 href={`https://wa.me/${COMPANY_INFO.whatsappNumber}?text=${encodeURIComponent(
-                  `Hello Archia Constructions, I am interested in exploring your interior architecture & material finishes for ${activeFeature.title}.`
+                  `Hello Milaan Constructions, I am interested in exploring your interior architecture & material finishes for ${activeFeature.title}.`
                 )}`}
                 target="_blank"
                 rel="noopener noreferrer"

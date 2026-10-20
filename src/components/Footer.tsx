@@ -8,7 +8,7 @@ export const Footer: React.FC = () => {
   };
 
   const whatsappUrl = `https://wa.me/${COMPANY_INFO.whatsappNumber}?text=${encodeURIComponent(
-    'Hello Archia Constructions, I am inquiring regarding a luxury residential project in the Chandigarh Tricity.'
+    'Hello Milaan Constructions, I am inquiring regarding a luxury residential project in the Chandigarh Tricity.'
   )}`;
 
   return (
@@ -19,20 +19,26 @@ export const Footer: React.FC = () => {
           {/* Col 1: Brand & Philosophy (4 cols) */}
           <div className="lg:col-span-4 space-y-4">
             <span className="text-base font-semibold tracking-[0.22em] uppercase text-white block">
-              ARCHIA CONSTRUCTIONS
+              {COMPANY_INFO.name}
             </span>
             <p className="text-neutral-400 font-light leading-relaxed max-w-sm">
               Bespoke luxury residential architecture, precision civil engineering, and turnkey villa construction crafted for discerning families across the Chandigarh Capital Region.
             </p>
-            <div className="pt-2">
+            <div className="pt-2 flex flex-col gap-2">
               <a
                 href={whatsappUrl}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="inline-flex items-center gap-2 px-4 py-2 bg-neutral-900 border border-neutral-800 text-white hover:text-amber-200 transition-colors uppercase tracking-wider text-[11px] font-mono"
+                className="inline-flex items-center gap-2 px-4 py-2 bg-neutral-900 border border-neutral-800 text-white hover:text-amber-200 transition-colors uppercase tracking-wider text-[11px] font-mono self-start"
               >
                 <MessageCircle className="w-3.5 h-3.5 text-emerald-400" />
                 <span>WhatsApp: {COMPANY_INFO.phoneDisplay}</span>
+              </a>
+              <a
+                href={`tel:${COMPANY_INFO.phoneTel}`}
+                className="text-neutral-300 hover:text-amber-200 transition-colors font-mono text-[11px]"
+              >
+                Call: {COMPANY_INFO.phoneDisplay}
               </a>
             </div>
           </div>
@@ -83,16 +89,29 @@ export const Footer: React.FC = () => {
           {/* Col 4: Studio Presence (3 cols) */}
           <div className="lg:col-span-3 space-y-3 font-mono text-[11px]">
             <p className="text-neutral-200 uppercase tracking-widest">
-              Design Studio
+              Direct Contact
             </p>
             <p className="text-neutral-400 font-sans leading-relaxed">
-              Level 4, Archia House <br />
-              IT Park & Knowledge Hub, Sector 82 <br />
-              Mohali, Punjab 140308, India
+              Mohali, Chandigarh & Panchkula <br />
+              Punjab & Chandigarh (UT), India
             </p>
-            <p className="text-neutral-500 pt-1">
-              Direct: concierge@archiaconstructions.com
+            <p className="text-neutral-500">
+              Site visits & consultations by prior appointment.
             </p>
+            <div className="pt-1 space-y-1">
+              <p>
+                Phone:{' '}
+                <a href={`tel:${COMPANY_INFO.phoneTel}`} className="text-amber-200 hover:underline">
+                  {COMPANY_INFO.phoneDisplay}
+                </a>
+              </p>
+              <p>
+                Email:{' '}
+                <a href={`mailto:${COMPANY_INFO.email}`} className="text-amber-200 hover:underline">
+                  {COMPANY_INFO.email}
+                </a>
+              </p>
+            </div>
           </div>
         </div>
       </div>

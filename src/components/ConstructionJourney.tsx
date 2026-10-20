@@ -15,7 +15,7 @@ export const ConstructionJourney: React.FC = () => {
         <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-16 pb-8 border-b border-neutral-800">
           <div>
             <div className="flex items-center gap-2 text-xs uppercase tracking-[0.25em] text-amber-200/90 font-mono mb-3">
-              <span>The Archia Process</span>
+              <span>The Milaan Process</span>
             </div>
             <h2 className="text-3xl sm:text-5xl font-light tracking-tight text-white leading-tight">
               Our Construction Journey: <br />
@@ -23,7 +23,7 @@ export const ConstructionJourney: React.FC = () => {
             </h2>
           </div>
           <p className="max-w-md text-sm md:text-base text-neutral-400 font-light leading-relaxed">
-            Every Archia villa follows an exacting 4-stage delivery matrix, audited against 380 quality control standards and documented through weekly client progress reports.
+            Every Milaan villa follows an exacting 4-stage delivery matrix, engineered to BIS & Seismic Zone IV standards and documented through scheduled client progress updates.
           </p>
         </div>
 
@@ -147,13 +147,13 @@ export const ConstructionJourney: React.FC = () => {
                     <ArrowRight className="w-4 h-4" />
                   </button>
                 ) : (
-                  <span className="text-xs font-mono text-neutral-400">Final Stage: 15-Year Warranty Handover</span>
+                  <span className="text-xs font-mono text-neutral-400">Final Stage: Comprehensive Quality Handover</span>
                 )}
               </div>
 
               <a
                 href={`https://wa.me/${COMPANY_INFO.whatsappNumber}?text=${encodeURIComponent(
-                  `Hello Archia Constructions, I would like to know more about your construction process and timeline for Phase ${currentStep.number}: ${currentStep.title}.`
+                  `Hello Milaan Constructions, I would like to know more about your construction process and timeline for Phase ${currentStep.number}: ${currentStep.title}.`
                 )}`}
                 target="_blank"
                 rel="noopener noreferrer"

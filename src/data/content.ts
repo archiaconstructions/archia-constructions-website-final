@@ -1,19 +1,22 @@
 import { Project, Service, JourneyStep, InteriorFeature, ServiceArea } from '../types';
 
 export const COMPANY_INFO = {
-  name: 'ARCHIA CONSTRUCTIONS',
+  name: 'MILAAN CONSTRUCTIONS',
   tagline: 'WE BUILD THE WAY YOU ENVISION.',
-  legalName: 'Archia Constructions Private Limited',
-  phone: '+91 98765 43210',
-  phoneDisplay: '+91 98765 43210',
-  whatsappNumber: '919876543210', // Configurable WhatsApp phone number without plus/dashes
-  email: 'concierge@archiaconstructions.com',
-  address: 'Level 4, Archia House, IT Park & Knowledge Hub, Sector 82, Mohali, Punjab 140308',
-  serviceRegion: 'Chandigarh Capital Region (Tricity & Greater Mohali)',
-  experienceYears: '18+',
-  projectsCompleted: '140+',
-  sqftDelivered: '1.2M+',
-  structuralWarranty: '15-Year',
+  legalName: 'Milaan Constructions',
+  phone: '+91 83600 51244',
+  phoneDisplay: '+91 83600 51244',
+  phoneTel: '+918360051244',
+  whatsappNumber: '918360051244',
+  email: 'archiaconstructions@gmail.com',
+  address: 'Mohali & Chandigarh Capital Region (Tricity), Punjab, India',
+  serviceRegion: 'Chandigarh Capital Region (Mohali, Chandigarh, Panchkula, New Chandigarh, Kharar, Zirakpur)',
+  servicePillars: {
+    focus: 'Luxury Residential Turnkey Construction',
+    geography: 'Chandigarh Capital Region (Tricity)',
+    standards: 'Seismic Zone IV & BIS Engineering Compliance',
+    execution: 'End-to-End Architectural & Civil Execution',
+  },
 };
 
 export const SERVICE_AREAS: ServiceArea[] = [
@@ -72,7 +75,7 @@ export const PROJECTS: Project[] = [
       'Post-tensioned cantilevered concrete roofs with zero column obstruction',
       'Italian Statuario marble flooring across all formal entertainment zones',
       'Integrated VRV HVAC climate management with acoustic duct dampening',
-      '15-year structural seal guarantee with German crystalline waterproofing',
+      'Multi-layer crystalline structural waterproofing and drainage management',
     ],
     architecturalStyle: 'Modernist Brutalist & Warm Tropical',
     scope: ['Architectural Planning', 'RCC & Civil Construction', 'Interior Architecture', 'Landscape Integration'],
@@ -270,7 +273,7 @@ export const SERVICES: Service[] = [
     deliverables: [
       'Fe 550D primary brand steel (Tata Tiscon / Jindal Panther) with mill test certificates',
       'Computer-batched ready-mix concrete (M30/M35/M40) with cube testing at every pour',
-      '15-year documented structural warranty card backed by corporate guarantee',
+      'Comprehensive structural audit reports and laboratory certified test sheets',
       'Sub-soil investigation and pile/raft foundation optimization',
     ],
     imageUrl: 'https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&w=2000&q=80',
@@ -355,17 +358,17 @@ export const JOURNEY_STEPS: JourneyStep[] = [
     phase: 'Phase Four',
     title: 'White-Glove Commissioning & Handover',
     description:
-      'Prior to handover, our independent audit team executes a 380-point snagging checklist. Every smart scene, water fixture, lock, and acoustic seal is calibrated to perfection, accompanied by our 15-year warranty.',
+      'Prior to handover, our site engineering team executes an exhaustive MEP and finishes audit. Every circuit, water fixture, joinery alignment, and acoustic seal is calibrated to perfection, accompanied by complete engineering documentation.',
     duration: 'Month 14',
     milestones: [
-      '380-point exhaustive MEP and aesthetic defect audit',
+      'Comprehensive MEP, plumbing, and structural snagging audit',
       'Industrial deep cleaning and stone crystallisation polishing',
-      'Digital homeowner manual, equipment warranties, and circuit schematics',
+      'Homeowner manual, equipment OEM warranties, and circuit schematics',
       'Ceremonial key handover and onboarding for smart home automation',
     ],
     qualityAssurance: [
-      'Formal 15-Year Structural Warranty Certificate',
-      '12-Month complimentary quarterly maintenance and tuning visits',
+      'Formal Structural Completion & As-Built Engineering Documentation',
+      'Dedicated post-handover customer support and tuning visits',
     ],
     imageUrl: 'https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&w=2000&q=80',
   },

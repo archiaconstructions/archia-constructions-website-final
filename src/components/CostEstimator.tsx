@@ -65,14 +65,14 @@ export const CostEstimator: React.FC = () => {
       name: 'Signature Turnkey',
       ratePerSqft: 2650,
       description: 'High-performance RCC structure, premium Indian marble & large-format tiles, premium sanitaryware, thermal UPVC/Aluminium windows.',
-      features: ['Fe 550D TMT Steel & M30 Concrete', '10-Year Waterproofing Warranty', 'Hafele/Blum kitchen hardware'],
+      features: ['Fe 550D TMT Steel & M30 Concrete', 'Multi-Layer Crystalline Waterproofing', 'Hafele/Blum kitchen hardware'],
     },
     {
       id: 'ultra',
       name: 'Ultra Luxury Monolith',
       ratePerSqft: 3450,
       description: 'Post-tensioned cantilevered slabs, imported Italian Statuario/Bottochino marble, Schüco/Reynaers slimline aluminium glazing, ducted VRV HVAC.',
-      features: ['15-Year Structural Warranty', 'Imported Italian Marble throughout', 'Schüco slimline thermal fenestration', 'Pre-wired smart automation'],
+      features: ['Post-Tensioned Cantilevered RCC', 'Imported Italian Marble throughout', 'Schüco slimline thermal fenestration', 'Pre-wired smart automation'],
     },
     {
       id: 'bespoke',
@@ -106,7 +106,7 @@ export const CostEstimator: React.FC = () => {
     builtUpArea <= 4000 ? '10 – 12' : builtUpArea <= 8000 ? '12 – 14' : '15 – 18';
 
   const generateWhatsAppInquiry = () => {
-    const text = `Hello Archia Constructions, I generated an estimate on your website:
+    const text = `Hello Milaan Constructions, I generated an estimate on your website:
 • Location: ${selectedLocation}
 • Plot / Scope: ${activePlot.label}
 • Estimated Area: ${builtUpArea.toLocaleString()} sq.ft
@@ -290,15 +290,15 @@ I would like to schedule a feasibility discussion with your chief architect.`;
                 </div>
               </div>
 
-              {/* Delivery Timeline & Warranty */}
+              {/* Delivery Timeline & Engineering Compliance */}
               <div className="grid grid-cols-2 gap-3 p-3.5 bg-neutral-950 border border-neutral-800 text-xs font-mono">
                 <div>
                   <span className="text-neutral-500 uppercase">Estimated Timeline</span>
                   <p className="text-white font-medium mt-0.5">{estimatedTimelineMonths} Months</p>
                 </div>
                 <div>
-                  <span className="text-neutral-500 uppercase">Structural Warranty</span>
-                  <p className="text-amber-200 font-medium mt-0.5">15-Year Guaranteed</p>
+                  <span className="text-neutral-500 uppercase">Structural Standard</span>
+                  <p className="text-amber-200 font-medium mt-0.5">Seismic Zone IV Compliant</p>
                 </div>
               </div>
 

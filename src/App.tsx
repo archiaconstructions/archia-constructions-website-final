@@ -20,7 +20,7 @@ import { COMPANY_INFO } from './data/content';
 
 export default function App() {
   const whatsappUrl = `https://wa.me/${COMPANY_INFO.whatsappNumber}?text=${encodeURIComponent(
-    'Hello Archia Constructions, I am interested in discussing a luxury residential construction project in the Chandigarh Tricity area.'
+    'Hello Milaan Constructions, I am interested in discussing a luxury residential construction project in the Chandigarh Tricity area.'
   )}`;
 
   return (

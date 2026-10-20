@@ -23,7 +23,7 @@ export const Navbar: React.FC = () => {
   ];
 
   const whatsappUrl = `https://wa.me/${COMPANY_INFO.whatsappNumber}?text=${encodeURIComponent(
-    'Hello Archia Constructions, I am interested in discussing a luxury residential construction / architectural project in the Chandigarh Tricity area.'
+    'Hello Milaan Constructions, I am interested in discussing a luxury residential construction / architectural project in the Chandigarh Tricity area.'
   )}`;
 
   return (
@@ -41,7 +41,7 @@ export const Navbar: React.FC = () => {
             href="#"
             className="group flex items-center gap-2 text-base md:text-lg font-semibold tracking-[0.22em] uppercase text-white hover:text-amber-200/90 transition-colors whitespace-nowrap shrink-0"
           >
-            <span>ARCHIA CONSTRUCTIONS</span>
+            <span>{COMPANY_INFO.name}</span>
           </a>
 
           {/* Zone 2: 4-5 clean single-line text navigation links */}
@@ -114,9 +114,18 @@ export const Navbar: React.FC = () => {
           </div>
 
           <div className="pt-6 border-t border-neutral-800 space-y-4">
-            <div className="text-xs text-neutral-400">
-              <p className="font-medium text-neutral-300">Mohali &bull; Chandigarh &bull; Panchkula</p>
-              <p className="mt-1">Sector 82 JLPL Industrial Park, Mohali</p>
+            <div className="text-xs text-neutral-400 space-y-1 font-mono">
+              <p className="font-medium text-neutral-200 font-sans">Chandigarh &bull; Mohali &bull; Panchkula</p>
+              <p>
+                <a href={`tel:${COMPANY_INFO.phoneTel}`} className="text-amber-200 hover:underline">
+                  {COMPANY_INFO.phoneDisplay}
+                </a>
+              </p>
+              <p>
+                <a href={`mailto:${COMPANY_INFO.email}`} className="text-neutral-400 hover:text-white">
+                  {COMPANY_INFO.email}
+                </a>
+              </p>
             </div>
             <a
               href={whatsappUrl}

@@ -13,7 +13,7 @@ interface ImageWithFallbackProps extends React.ImgHTMLAttributes<HTMLImageElemen
 export const ImageWithFallback: React.FC<ImageWithFallbackProps> = ({
   src,
   alt,
-  fallbackText = 'Archia Architectural Photography',
+  fallbackText = 'Milaan Architectural Photography',
   className = '',
   containerClassName = '',
   priority = false,

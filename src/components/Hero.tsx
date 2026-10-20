@@ -104,7 +104,7 @@ export const Hero: React.FC = () => {
   }, []);
 
   const whatsappUrl = `https://wa.me/${COMPANY_INFO.whatsappNumber}?text=${encodeURIComponent(
-    'Hello Archia Constructions, I would like to schedule a private architectural consultation for our residence in Chandigarh Tricity.'
+    'Hello Milaan Constructions, I would like to schedule a private architectural consultation for our residence in Chandigarh Tricity.'
   )}`;
 
   return (
@@ -206,20 +206,20 @@ export const Hero: React.FC = () => {
           {/* Key Trust Signals */}
           <div className="grid grid-cols-2 sm:grid-cols-4 gap-6 md:gap-12 w-full md:w-auto">
             <div>
-              <p className="text-xs uppercase tracking-widest text-neutral-400 font-mono">Experience</p>
-              <p className="text-lg md:text-xl font-light text-white tabular-nums mt-0.5">18+ Years</p>
+              <p className="text-xs uppercase tracking-widest text-neutral-400 font-mono">Specialisation</p>
+              <p className="text-base md:text-lg font-light text-white mt-0.5">Luxury Residential</p>
             </div>
             <div>
-              <p className="text-xs uppercase tracking-widest text-neutral-400 font-mono">Delivered</p>
-              <p className="text-lg md:text-xl font-light text-white tabular-nums mt-0.5">1.2M+ Sq.Ft</p>
+              <p className="text-xs uppercase tracking-widest text-neutral-400 font-mono">Service Region</p>
+              <p className="text-base md:text-lg font-light text-white mt-0.5">Chandigarh Tricity</p>
             </div>
             <div>
-              <p className="text-xs uppercase tracking-widest text-neutral-400 font-mono">Warranty</p>
-              <p className="text-lg md:text-xl font-light text-white tabular-nums mt-0.5">15-Year Structural</p>
+              <p className="text-xs uppercase tracking-widest text-neutral-400 font-mono">Engineering</p>
+              <p className="text-base md:text-lg font-light text-white mt-0.5">Seismic Zone IV</p>
             </div>
             <div>
-              <p className="text-xs uppercase tracking-widest text-neutral-400 font-mono">Delivery</p>
-              <p className="text-lg md:text-xl font-light text-white tabular-nums mt-0.5">100% Turnkey</p>
+              <p className="text-xs uppercase tracking-widest text-neutral-400 font-mono">Execution</p>
+              <p className="text-base md:text-lg font-light text-white mt-0.5">End-to-End Turnkey</p>
             </div>
           </div>
 

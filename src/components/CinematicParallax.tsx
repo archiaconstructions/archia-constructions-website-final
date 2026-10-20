@@ -512,7 +512,7 @@ export const CinematicParallax: React.FC = () => {
             <div className="p-4 bg-black/75 backdrop-blur-md border border-neutral-800 max-w-xs text-right font-mono text-xs">
               <div className="flex items-center justify-end gap-2 text-amber-200 mb-1">
                 <ShieldCheck className="w-4 h-4" />
-                <span className="uppercase tracking-wider">Tricity Structural Guarantee</span>
+                <span className="uppercase tracking-wider">Tricity Structural Standards</span>
               </div>
               <p className="text-neutral-300 font-sans text-xs">
                 Seismic Zone IV engineered. Every milestone tested in certified laboratories.
@@ -521,7 +521,7 @@ export const CinematicParallax: React.FC = () => {
 
             <a
               href={`https://wa.me/${COMPANY_INFO.whatsappNumber}?text=${encodeURIComponent(
-                `Hello Archia Constructions, I explored your architectural spatial walkthrough (Phase ${currentStage.stageNumber}: ${currentStage.title}) and would like to discuss our plot.`
+                `Hello Milaan Constructions, I explored your architectural spatial walkthrough (Phase ${currentStage.stageNumber}: ${currentStage.title}) and would like to discuss our plot.`
               )}`}
               target="_blank"
               rel="noopener noreferrer"

@@ -30,7 +30,7 @@ export const ContactSection: React.FC = () => {
     setFormSubmitted(true);
 
     // Build prefilled WhatsApp message
-    const msg = `New Website Inquiry for Archia Constructions:
+    const msg = `New Website Inquiry for Milaan Constructions:
 • Name: ${formData.name}
 • Phone: ${formData.phone}
 • Location: ${formData.location}
@@ -43,7 +43,7 @@ export const ContactSection: React.FC = () => {
   };
 
   const directWhatsAppUrl = `https://wa.me/${COMPANY_INFO.whatsappNumber}?text=${encodeURIComponent(
-    'Hello Archia Constructions, I would like to schedule a private consultation for a luxury residential construction project in the Chandigarh Tricity.'
+    'Hello Milaan Constructions, I would like to schedule a private consultation for a luxury residential construction project in the Chandigarh Tricity.'
   )}`;
 
   return (
@@ -87,18 +87,47 @@ export const ContactSection: React.FC = () => {
                 className="inline-flex items-center justify-center gap-3 w-full py-4 text-xs font-semibold tracking-wider uppercase bg-amber-100 hover:bg-amber-200 text-neutral-950 transition-colors"
               >
                 <MessageCircle className="w-4 h-4 text-emerald-800" />
-                <span>Message on WhatsApp (+91 98765 43210)</span>
+                <span>Message on WhatsApp ({COMPANY_INFO.phoneDisplay})</span>
               </a>
             </div>
 
             {/* Studio Address & Details */}
             <div className="space-y-6 p-8 bg-neutral-900/30 border border-neutral-800/80 text-xs font-mono text-neutral-300">
               <div className="flex items-start gap-3">
+                <Phone className="w-4 h-4 text-amber-200 shrink-0 mt-0.5" />
+                <div>
+                  <p className="uppercase tracking-widest text-neutral-400">Direct Phone</p>
+                  <a
+                    href={`tel:${COMPANY_INFO.phoneTel}`}
+                    className="text-amber-200 hover:underline mt-1 block font-sans text-sm font-medium"
+                  >
+                    {COMPANY_INFO.phoneDisplay}
+                  </a>
+                </div>
+              </div>
+
+              <div className="flex items-start gap-3">
+                <Mail className="w-4 h-4 text-amber-200 shrink-0 mt-0.5" />
+                <div>
+                  <p className="uppercase tracking-widest text-neutral-400">Official Email</p>
+                  <a
+                    href={`mailto:${COMPANY_INFO.email}`}
+                    className="text-amber-200 hover:underline mt-1 block font-sans text-sm"
+                  >
+                    {COMPANY_INFO.email}
+                  </a>
+                </div>
+              </div>
+
+              <div className="flex items-start gap-3">
                 <MapPin className="w-4 h-4 text-amber-200 shrink-0 mt-0.5" />
                 <div>
-                  <p className="uppercase tracking-widest text-neutral-400">Design Studio & Offices</p>
+                  <p className="uppercase tracking-widest text-neutral-400">Service Coverage</p>
                   <p className="text-neutral-200 mt-1 font-sans text-sm leading-relaxed">
                     {COMPANY_INFO.address}
+                  </p>
+                  <p className="text-neutral-500 text-[11px] mt-1 font-sans">
+                    Consultations & site visits scheduled by prior appointment.
                   </p>
                 </div>
               </div>
@@ -111,19 +140,6 @@ export const ContactSection: React.FC = () => {
                     Monday – Saturday: 9:30 AM – 7:00 PM <br />
                     <span className="text-neutral-400 text-xs">Sunday by prior appointment only</span>
                   </p>
-                </div>
-              </div>
-
-              <div className="flex items-start gap-3">
-                <Mail className="w-4 h-4 text-amber-200 shrink-0 mt-0.5" />
-                <div>
-                  <p className="uppercase tracking-widest text-neutral-400">Direct Inquiries</p>
-                  <a
-                    href={`mailto:${COMPANY_INFO.email}`}
-                    className="text-amber-200 hover:underline mt-1 block font-sans text-sm"
-                  >
-                    {COMPANY_INFO.email}
-                  </a>
                 </div>
               </div>
             </div>
@@ -154,18 +170,32 @@ export const ContactSection: React.FC = () => {
                   <CheckCircle2 className="w-8 h-8" />
                 </div>
                 <h3 className="text-2xl font-light text-white tracking-tight">
-                  Inquiry Dispatched Successfully
+                  Inquiry Ready to Send via WhatsApp
                 </h3>
                 <p className="text-sm text-neutral-300 max-w-md mx-auto leading-relaxed">
-                  Thank you, <span className="text-white font-medium">{formData.name}</span>. Your project parameters have been forwarded. Our senior project architect will contact you within 24 business hours.
+                  Thank you, <span className="text-white font-medium">{formData.name}</span>. Your enquiry parameters have been compiled. Please confirm the message on WhatsApp to begin a direct conversation with our team at{' '}
+                  <a href={`tel:${COMPANY_INFO.phoneTel}`} className="text-amber-200 underline font-mono">
+                    {COMPANY_INFO.phoneDisplay}
+                  </a>.
                 </p>
-                <div className="pt-4">
+                <div className="pt-4 flex flex-wrap justify-center gap-3">
+                  <a
+                    href={`https://wa.me/${COMPANY_INFO.whatsappNumber}?text=${encodeURIComponent(
+                      `New Website Inquiry for Milaan Constructions:\n• Name: ${formData.name}\n• Phone: ${formData.phone}\n• Location: ${formData.location}\n• Scope: ${formData.scope}\n• Plot Area: ${formData.plotArea}\n• Vision Notes: ${formData.notes || 'None provided'}`
+                    )}`}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="inline-flex items-center gap-2 px-6 py-3 text-xs font-semibold tracking-wider uppercase bg-amber-100 hover:bg-amber-200 text-neutral-950 transition-colors"
+                  >
+                    <MessageCircle className="w-4 h-4 text-emerald-800" />
+                    <span>Open WhatsApp Chat</span>
+                  </a>
                   <button
                     type="button"
                     onClick={() => setFormSubmitted(false)}
                     className="px-6 py-2.5 text-xs font-mono tracking-widest uppercase border border-neutral-700 text-neutral-300 hover:text-white hover:border-white transition-colors"
                   >
-                    Submit Another Inquiry
+                    Edit Details
                   </button>
                 </div>
               </div>
@@ -208,7 +238,7 @@ export const ContactSection: React.FC = () => {
                     <input
                       type="tel"
                       required
-                      placeholder="+91 98765 XXXXX"
+                      placeholder="+91 83600 XXXXX"
                       value={formData.phone}
                       onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
                       className="w-full bg-neutral-950 border border-neutral-800 p-3 text-sm text-neutral-200 focus:outline-none focus:border-amber-200"
