@@ -1,0 +1,8 @@
+{
+  "name": "Archia Constructions | Luxury Architecture & Residential Construction",
+  "description": "Premier luxury residential construction, contemporary architecture, and bespoke interior design studio serving Chandigarh, Mohali, Panchkula, Kharar, Zirakpur, and New Chandigarh.",
+  "requestFramePermissions": [],
+  "majorCapabilities": [
+    "MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"
+  ]
+}
