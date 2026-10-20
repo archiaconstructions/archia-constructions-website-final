@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://archia-constructions-website-final.tikotrailkids.workers.dev/sitemap.xml
