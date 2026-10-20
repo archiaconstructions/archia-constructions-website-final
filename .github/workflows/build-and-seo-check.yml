@@ -1,0 +1,26 @@
+name: Build and SEO file validation
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+      - name: Install Bun
+        uses: oven-sh/setup-bun@v2
+      - name: Install dependencies
+        run: bun install --frozen-lockfile
+      - name: Build production bundle
+        run: bun run build
+      - name: Verify SEO files exist
+        run: |
+          test -s public/robots.txt
+          test -s public/sitemap.xml
+          grep -q 'Sitemap: https://archia-constructions-website-final.tikotrailkids.workers.dev/sitemap.xml' public/robots.txt
+          grep -q '<loc>https://archia-constructions-website-final.tikotrailkids.workers.dev/</loc>' public/sitemap.xml
