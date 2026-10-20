@@ -20,6 +20,7 @@ export const Navbar: React.FC = () => {
     { label: 'Journey', href: '#journey' },
     { label: 'Interiors', href: '#interiors' },
     { label: 'Estimator', href: '#estimator' },
+    { label: 'FAQs', href: '#faqs' },
   ];
 
   const whatsappUrl = `https://wa.me/${COMPANY_INFO.whatsappNumber}?text=${encodeURIComponent(
