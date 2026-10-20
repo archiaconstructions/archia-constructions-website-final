@@ -16,6 +16,7 @@ import { ConstructionJourney } from './components/ConstructionJourney';
 import { LuxuryInteriors } from './components/LuxuryInteriors';
 import { CostEstimator } from './components/CostEstimator';
 import { ContactSection } from './components/ContactSection';
+import { FAQSection } from './components/FAQSection';
 import { Footer } from './components/Footer';
 import { MessageCircle } from 'lucide-react';
 import { COMPANY_INFO } from './data/content';
@@ -88,7 +89,10 @@ export default function App() {
         {/* 8. Interactive Tricity Villa Cost & Scope Estimator */}
         <CostEstimator />
 
-        {/* 9. Full-Width Contact Section & WhatsApp CTA */}
+        {/* 9. Search-friendly, visible homeowner FAQs */}
+        <FAQSection />
+
+        {/* 10. Full-Width Contact Section & WhatsApp CTA */}
         <ContactSection />
       </main>
 
